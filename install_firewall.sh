@@ -32,7 +32,7 @@ ufw allow from 192.168.22.0/24 to any port 443 proto tcp comment 'HTTPS'
 echo "Nous allons maintenant autorisé le passage du trafic entre du LAN vers internet"
 #Activation du forwarding IPv4
 sysctl -w net.ipv4.ip_forward=1
-echo "net.ipv4.ip_forward=1" | tee -a /etc/sysctl.conf
+#echo "net.ipv4.ip_forward=1" | tee -a /etc/sysctl.conf
 
 #regles Pare-feu
 sed -i '/^*nat/,/^COMMIT/d' /etc/ufw/before.rules
