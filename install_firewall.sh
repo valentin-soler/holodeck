@@ -8,7 +8,7 @@ apt install ufw -y
 
 echo "Nous allons maintenant mettre en place les régles de pare-feu"
 #Par défaut, nous allons demandé à UFW de bloqué toutes les connections entrante.
-ufw default deny incomming
+ufw default deny incoming
 ufw default allow outgoing
 
 #Nous allons maintenant ouvrir certain port uniquement pour notre LAN.
