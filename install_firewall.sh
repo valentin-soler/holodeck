@@ -4,12 +4,12 @@ echo "Ce script va installer UFW et les différentes régles dont nous avons bes
 
 echo "Installation d'UFW"
 apt update
-apt install ufw
+apt install ufw -y
 
 echo "Nous allons maintenant mettre en place les régles de pare-feu"
 #Par défaut, nous allons demandé à UFW de bloqué toutes les connections entrante.
 ufw default deny incomming
-sudo ufw default allow outgoing
+ufw default allow outgoing
 
 #Nous allons maintenant ouvrir certain port uniquement pour notre LAN.
 #Dans mon cas ma plage IP de mon lan est 192.168.22.0/24
@@ -33,9 +33,7 @@ ufw allow from 192.168.22.0/24 to any port 443 proto tcp comment 'HTTPS'
 echo "Nous allons maintenant autorisé le passage du trafic entre du LAN vers internet"
 #Activation du forwarding IPv4
 sysctl -w net.ipv4.ip_forward=1
-if ! grep -q "^net.ipv4.ip_forward=1" /etc/sysctl.conf; then
-	echo "net.ipv4.ip_forward=1" | tee -a /etc/sysctl.conf
-fi
+echo "net.ipv4.ip_forward=1" | tee -a /etc/sysctl.conf
 
 #regles Pare-feu
 sed -i '/^*nat/,/^COMMIT/d' /etc/ufw/before.rules
