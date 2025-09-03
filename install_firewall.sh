@@ -1,0 +1,29 @@
+#/bin/bash
+
+echo "Ce script va installer UFW et les différentes régles dont nous avons besoins dans Holodeck"
+
+echo "Installation d'UFW"
+apt update
+apt install ufw
+
+echo "Nous allons maintenant mettre en place les régles de pare-feu"
+#Par défaut, nous allons demandé à UFW de bloqué toutes les connections entrante.
+ufw default deny incomming
+#Nous allons maintenant ouvrir certain port uniquement pour notre LAN.
+#Dans mon cas ma plage IP de mon lan est 192.168.22.0/24
+#Et je dois ouvrir les ports pour mon DHCP,DNS,FTP et serveur web vers mon LAN
+#DHCP
+ufw allow from 192.168.22.0/24 to any port 67 proto udp comment 'Allow DHCP Server (bootps)'
+ufw allow from 192.168.22.0/24 to any port 68 proto udp comment 'Allow DHCP Client (bootpc)'
+#DNS
+ufw allow from 192.168.22.0/24 to any port 53 proto udp comment 'DNS over UDP'
+ufw allow from 192.168.22.0/24 to any port 53 proto tcp comment 'DNS over TCP'
+#FTP
+ufw allow from 192.168.22.0/24 to any port 21 proto tcp comment 'FTP Control'
+ufw allow from 192.168.22.0/24 to any port 990 proto tcp comment 'FTPS Implicit'
+#J'ouvre uniqument 100 port pour le passif, car je ne compte pas avoir beaucoups de connection en simultanée.
+#Pour renseignez les port pour proftpd : echo "30000 30100" > /etc/pure-ftpd/conf/PassivePortRange
+ufw allow from 192.168.22.0/24 to any port 30000:30100 proto tcp comment 'FTP Data Passive'
+#Srv web
+ufw allow from 192.168.22.0/24 to any port 80 proto tcp comment 'HTTP'
+ufw allow from 192.168.22.0/24 to any port 443 proto tcp comment 'HTTPS'
